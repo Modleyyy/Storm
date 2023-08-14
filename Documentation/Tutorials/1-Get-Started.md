@@ -14,9 +14,10 @@ Table of contents:
 - [Create a project from scratch](#create-a-project-from-scratch)
 
 ## Making a new project
-*As easy as cream!* To create a new Storm project, you can just clone th- ***WAIT***! Do you have [.NET Framework 6.0+](https://dotnet.microsoft.com) installed on your machine? This is a ***C#*** project after all! If not, [install the .NET Framework 6.0 or a newer vesion](https://dotnet.microsoft.com/download). Anyways, \*hum hum\*, you can just clone the [StormSampleProject repository](https://github.com/Modleyyy/StormSampleProject) and there you go!
+*As easy as cream!* To create a new Storm project, you can just clone th- ***WAIT***! Do you have [.NET Framework 6.0+](https://dotnet.microsoft.com) installed on your machine? This is a ***C#*** project after all! If not, [install the .NET Framework 6.0 or a newer vesion](https://dotnet.microsoft.com/download). Anyways, \*hum hum\*, you can just clone the [StormSampleProject repository](https://github.com/Modleyyy/StormSampleProject) and update submodules, then boom!
 ```console
 git clone https://github.com/Modleyyy/StormSampleProject.git
+git submodule update --init
 ```
 You'll get a simple project with all you need to start making games! [You could also create a Storm project from scratch if you want to](#create-a-project-from-scratch). (it's more time consuming but okay)
 

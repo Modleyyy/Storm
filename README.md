@@ -8,51 +8,13 @@
 Storm is a free and open-source framework you can build games with in C# with no extra packages or anything, *just a pure Windows Forms game framework!*
 
 ## So, how do I use it?
-Good question, *it's simple!* First, make sure you've got .NET 6+ installed or your machine. Then, just clone the StormSampleProject repository, and there you go! A brand new project for you to use!
+Good question, *it's simple!* First, make sure you've got .NET 6+ installed or your machine. Then, just clone the StormSampleProject repository and update Git submodules, and there you go! A brand new project for you to use!
 ```
 git clone https://github.com/Modleyyy/StormSampleProject.git
+git submodule update --init
 ```
 
 You'll get a simple project with a little Player.cs GameObject, a GameData.json file, an icon, a Usings.cs to put global usings into, a Storm folder with all of the code of the framework, and finally a sample MyGame.cs file to get you truly started!
-
-```csharp
-namespace MyGame;
-
-#nullable disable
-public class MyGame : Game
-{
-    Player player;
-
-    public override void OnLoad()
-    {
-        // TODO: Initialize and load stuff here. eg:
-
-        screenColor = Color.CornflowerBlue;
-
-        // Load the player and set it's position to be at the center of the screen.
-        player = new Player(new Vector2(400, 300));
-    }
-
-    public override void OnUpdate(double deltaTime)
-    {
-        // TODO: Update stuff here.
-
-        // DISCLAIMER: This method is called after updating EVERYTHING else. You don't
-        // need to update GameObjects and their Components, they're automatically
-        // updated.
-    }
-
-    public override void OnDraw(Graphics graphics)
-    {
-        // TODO: Draw your stuff here.
-    
-        // DISCLAIMER: This method is called after drawing EVERYTHING else. So GameObjects
-        // will have their OnDraw method called first, then this is called. So you could
-        // use this for drawing stuff like debug, UI, screen shaders, ect...
-    }
-}
-
-```
 
 You could also make a project from scratch but uh... preferably... don't do that? Or something? Are you okay?? Why would you even do that!?!?!? If you still want to do that (weirdo), [here's a tutorial on that](https://github.com/Modleyyy/Storm/wiki/GetStarted/#create-a-project-from-scratch)!
 
