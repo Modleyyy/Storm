@@ -85,7 +85,7 @@ public abstract partial class Game
             // The reason we do a try block when calling OnDraw is because stuff that is
             // drawn might be null when drawing which will result in a crash, so we do
             // this just in case it might happen
-            try { gameObjectsDraw[i]?.OnDraw(graph); } catch {}
+            if (gameObjectsDraw[i].visible) try { gameObjectsDraw[i]?.OnDraw(graph); } catch {}
         }
 
         // Same thing here

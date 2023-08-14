@@ -35,83 +35,80 @@ public class Sprite2D : Component
 
     public void Draw(Graphics graphics, IPixelShader? shader = null)
     {
-        if (boundObject.visible)
+        Bitmap spr = GetSprite();
+
+        Vector2 pos = new(boundObject.transform.xPos, boundObject.transform.yPos);
+        pos += offset;
+        Vector2 size = new(spr.Width * boundObject.transform.width, spr.Height * boundObject.transform.height);
+        if (flippedH) size.x *= -1;
+        if (flippedV) size.y *= -1;
+
+        if (centered) pos -= size / 2;
+
+        if (shader is not null)
         {
-            Bitmap spr = GetSprite();
-
-            Vector2 pos = new(boundObject.transform.xPos, boundObject.transform.yPos);
-            pos += offset;
-            Vector2 size = new(spr.Width * boundObject.transform.width, spr.Height * boundObject.transform.height);
-            if (flippedH) size.x *= -1;
-            if (flippedV) size.y *= -1;
-
-            if (centered) pos -= size / 2;
-
-            if (shader is not null)
+            Bitmap shadedSpr = shader!.ShadeImage(spr);
+            if (boundObject.tint != Color.White)
             {
-                Bitmap shadedSpr = shader!.ShadeImage(spr);
-                if (boundObject.tint != Color.White)
+                IPixelShader t = new TintShader()
                 {
-                    IPixelShader t = new TintShader()
-                    {
-                        tint = boundObject.tint
-                    };
-                    shadedSpr = t.ShadeImage(shadedSpr);
-                }
+                    tint = boundObject.tint
+                };
+                shadedSpr = t.ShadeImage(shadedSpr);
+            }
+    
+            float centerX = pos.x + size.x / 2;
+            float centerY = pos.y + size.y / 2;
         
-                float centerX = pos.x + size.x / 2;
-                float centerY = pos.y + size.y / 2;
-            
-                if (boundObject.transform.rotation == 0)
-                {
-                    graphics.DrawImage(shadedSpr, new RectangleF(pos.x, pos.y, size.x, size.y));
-                }
-                else
-                {
-                    using (Matrix transformMatrix = new())
-                    {
-                        transformMatrix.RotateAt(boundObject.transform.rotation, new PointF(centerX, centerY));
-                        graphics.Transform = transformMatrix;
-            
-                        graphics.DrawImage(shadedSpr, new RectangleF(pos.x, pos.y, size.x, size.y));
-                    }
-
-                    graphics.Transform = emptyMatrix;
-                    shadedSpr.Dispose();
-                }
+            if (boundObject.transform.rotation == 0)
+            {
+                graphics.DrawImage(shadedSpr, new RectangleF(pos.x, pos.y, size.x, size.y));
             }
             else
             {
-                Bitmap tintedSpr = spr;
-                if (boundObject.tint != Color.White)
+                using (Matrix transformMatrix = new())
                 {
-                    IPixelShader t = new TintShader()
-                    {
-                        tint = boundObject.tint
-                    };
-                    tintedSpr = t.ShadeImage(spr);
+                    transformMatrix.RotateAt(boundObject.transform.rotation, new PointF(centerX, centerY));
+                    graphics.Transform = transformMatrix;
+        
+                    graphics.DrawImage(shadedSpr, new RectangleF(pos.x, pos.y, size.x, size.y));
                 }
-            
-                float centerX = pos.x + size.x / 2;
-                float centerY = pos.y + size.y / 2;
 
-                if (boundObject.transform.rotation == 0)
+                graphics.Transform = emptyMatrix;
+                shadedSpr.Dispose();
+            }
+        }
+        else
+        {
+            Bitmap tintedSpr = spr;
+            if (boundObject.tint != Color.White)
+            {
+                IPixelShader t = new TintShader()
                 {
-                    graphics.DrawImage(tintedSpr, new RectangleF(pos.x, pos.y, size.x, size.y));
-                }
-                else
+                    tint = boundObject.tint
+                };
+                tintedSpr = t.ShadeImage(spr);
+            }
+        
+            float centerX = pos.x + size.x / 2;
+            float centerY = pos.y + size.y / 2;
+
+            if (boundObject.transform.rotation == 0)
+            {
+                graphics.DrawImage(tintedSpr, new RectangleF(pos.x, pos.y, size.x, size.y));
+            }
+            else
+            {
+                using (Matrix transformMatrix = new())
                 {
-                    using (Matrix transformMatrix = new())
-                    {
-                        transformMatrix.RotateAt(boundObject.transform.rotation, new PointF(centerX, centerY));
-                        graphics.Transform = transformMatrix;
+                    transformMatrix.RotateAt(boundObject.transform.rotation, new PointF(centerX, centerY));
+                    graphics.Transform = transformMatrix;
 
-                        graphics.DrawImage(tintedSpr, pos.x, pos.y, size.x, size.y);
-                    }
-
-                    graphics.Transform = emptyMatrix;
-                    if (!ReferenceEquals(spr, tintedSpr)) tintedSpr.Dispose();
+                    graphics.DrawImage(tintedSpr, pos.x, pos.y, size.x, size.y);
                 }
+
+                graphics.Transform = emptyMatrix;
+                if (!ReferenceEquals(spr, tintedSpr)) tintedSpr.Dispose();
             }
         }
     }
