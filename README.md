@@ -8,7 +8,7 @@
 Storm is a free and open-source framework you can build games with in C# with no extra packages or anything, *just a pure Windows Forms game framework!*
 
 ## So, how do I use it?
-Good question, *it's simple!* First, make sure you've got .NET 6+ installed or your machine. Then, just clone the StormSampleProject repository and update Git submodules, and there you go! A brand new project for you to use!
+Good question, *it's simple!* First, make sure you've got .NET 6+ installed or your machine. Then, just clone the [StormSampleProject repository](https://github.com/Modleyyy/StormSampleProject) and update Git submodules, and there you go! A brand new project for you to use!
 ```
 git clone https://github.com/Modleyyy/StormSampleProject.git
 cd ProjectFolder
