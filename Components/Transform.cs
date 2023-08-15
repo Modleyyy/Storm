@@ -54,12 +54,28 @@ public class Transform : Component
         this.scale = Vector2.One;
         this.rotation = 0f;
     }
+    
+    public Transform(Vector2 position) 
+    {
+        this.position = position;
+        this.scale = Vector2.One;
+        this.rotation = 0f;
+    }
+
+    public Transform(Vector2 position, float scale)
+    {
+        this.position = position;
+        this.scale = new Vector2(scale, scale);
+        this.rotation = 0f;
+    }
+    
     public Transform(Vector2 position, Vector2 scale, float? rotation = null)
     {
         this.position = position;
         this.scale = scale;
         this.rotation = rotation ?? 0;
     }
+    
     public Transform(float? xPos = null, float? yPos = null, float? width = null, float? height = null, float? rotation = null)
     {
         this.xPos     = xPos     ?? 0;
