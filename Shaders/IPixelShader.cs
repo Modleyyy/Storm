@@ -45,9 +45,6 @@ public interface IPixelShader
 
                     Color shadedColor = ShaderCode(pixelColor, uv, coords, texSize);
 
-                    if (pixelColor == shadedColor)
-                        return;
-
                     row[offset] = shadedColor.B;
                     row[offset + 1] = shadedColor.G;
                     row[offset + 2] = shadedColor.R;

@@ -15,7 +15,7 @@ public static class ShaderHelpers
 
     public static float Fract(float value)
     {
-        return value - (float)Math.Floor(value);
+        return value - MathF.Floor(value);
     }
 
     public static Color Mix(Color color1, Color color2, float ratio)

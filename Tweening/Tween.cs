@@ -18,7 +18,7 @@ public class Tween : Component
                 tweener.onComplete();
             }
         });
-        tweeners.RemoveAll( t => (t.isFinished == true) );
+        tweeners.RemoveAll( t => t.isFinished );
     }
 
     public void TweenValue<T>(T startValue, T endValue, float duration, Func<float, float> easingFunction,

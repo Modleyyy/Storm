@@ -1,6 +1,7 @@
 namespace Storm.Components;
 
 using Shaders;
+using Shaders.BuiltInShaders;
 using Utils;
 
 using System.Drawing;
@@ -9,6 +10,7 @@ using System.Drawing.Drawing2D;
 public class Sprite2D : Component
 {
     private readonly static Matrix emptyMatrix = new();
+    private static TintShader t = new();
     public new bool isActive = false;
     
     protected Bitmap sprite;
@@ -50,11 +52,9 @@ public class Sprite2D : Component
             Bitmap shadedSpr = shader!.ShadeImage(spr);
             if (boundObject.tint != Color.White)
             {
-                IPixelShader t = new TintShader()
-                {
-                    tint = boundObject.tint
-                };
-                shadedSpr = t.ShadeImage(shadedSpr);
+                t.tint = boundObject.tint;
+                IPixelShader s = t;
+                shadedSpr = s.ShadeImage(shadedSpr);
             }
     
             float centerX = pos.x + size.x / 2;
@@ -116,25 +116,4 @@ public class Sprite2D : Component
     public void FlipH() => flippedH = !flippedH;
 
     public void FlipV() => flippedV = !flippedV;
-
-    private struct TintShader : IPixelShader
-    {
-        public Color tint = Color.White;
-
-        public TintShader() {}
-
-        Color IPixelShader.ShaderCode(Color pixelColor, Vector2 uv, Vector2 coords, Vector2 texSize)
-        {
-            if (tint == Color.White)
-            {
-                return pixelColor;
-            }
-            byte a = (byte) (pixelColor.A * tint.A / 255);
-            byte r = (byte) (pixelColor.R * tint.R / 255);
-            byte g = (byte) (pixelColor.G * tint.G / 255);
-            byte b = (byte) (pixelColor.B * tint.B / 255);
-
-            return Color.FromArgb(a, r, g, b);
-        }
-    }
 }

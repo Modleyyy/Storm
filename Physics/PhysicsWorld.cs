@@ -51,8 +51,6 @@ public class PhysicsWorld
                     {
                         if (bodyB is RectangleBody rB)
                         {
-                            // TODO: Implement AABB vs AABB collision detection and response
-
                             bool isColliding = rA.right >= rB.left && rA.left <= rB.right && rA.bottom >= rB.top && rA.top <= rB.bottom;
                             if (isColliding)
                             {
@@ -60,13 +58,12 @@ public class PhysicsWorld
                                 {
                                     if (!rB.isStatic)
                                     {
-                                        float overlapX = Math.Min(rA.right - rB.left, rB.right - rA.left);
-                                        float overlapY = Math.Min(rA.bottom - rB.top, rB.bottom - rA.top);
+                                        float overlapX = MathF.Min(rA.right - rB.left, rB.right - rA.left);
+                                        float overlapY = MathF.Min(rA.bottom - rB.top, rB.bottom - rA.top);
 
                                         if (overlapX < overlapY)
                                         {
-                                            float penetrationDepth = overlapX;
-                                            float separation = penetrationDepth / 2f;
+                                            float separation = overlapX / 2f;
 
                                             rA.boundObject.transform.position = rA.center - new Vector2(separation, 0);
                                             rB.boundObject.transform.position = rB.center + new Vector2(separation, 0);
@@ -76,8 +73,7 @@ public class PhysicsWorld
                                         }
                                         else
                                         {
-                                            float penetrationDepth = overlapY;
-                                            float separation = penetrationDepth / 2f;
+                                            float separation = overlapY / 2f;
 
                                             rA.boundObject.transform.position = rA.center - new Vector2(0, separation);
                                             rB.boundObject.transform.position = rB.center + new Vector2(0, separation);
@@ -88,50 +84,35 @@ public class PhysicsWorld
                                     }
                                     else if (rB.isStatic)
                                     {
-                                        float overlapX = Math.Min(rA.right - rB.left, rB.right - rA.left);
-                                        float overlapY = Math.Min(rA.bottom - rB.top, rB.bottom - rA.top);
+                                        float overlapX = MathF.Min(rA.right - rB.left, rB.right - rA.left);
+                                        float overlapY = MathF.Min(rA.bottom - rB.top, rB.bottom - rA.top);
 
                                         if (overlapX < overlapY)
                                         {
-                                            float penetrationDepth = overlapX;
-
-                                            rA.boundObject.transform.position = rA.center - new Vector2(penetrationDepth, 0);
+                                            rA.boundObject.transform.position = rA.center - new Vector2(overlapX, 0);
                                             rA.velocity.x *= -1;
                                         }
                                         else
                                         {
-                                            float penetrationDepth = overlapY;
-
-                                            rA.boundObject.transform.position = rA.center - new Vector2(0, penetrationDepth);
+                                            rA.boundObject.transform.position = rA.center - new Vector2(0, overlapY);
                                             rA.velocity.y *= -1;
                                         }
                                     }
                                 }
-                                else if (rA.isStatic)
+                                else if (!rB.isStatic)
                                 {
-                                    if (!rB.isStatic)
+                                    float overlapX = MathF.Min(rA.right - rB.left, rB.right - rA.left);
+                                    float overlapY = MathF.Min(rA.bottom - rB.top, rB.bottom - rA.top);
+
+                                    if (overlapX < overlapY)
                                     {
-                                        float overlapX = Math.Min(rA.right - rB.left, rB.right - rA.left);
-                                        float overlapY = Math.Min(rA.bottom - rB.top, rB.bottom - rA.top);
-
-                                        if (overlapX < overlapY)
-                                        {
-                                            float penetrationDepth = overlapX;
-
-                                            rB.boundObject.transform.position = rB.center + new Vector2(penetrationDepth, 0);
-                                            rB.velocity.x *= -1;
-                                        }
-                                        else
-                                        {
-                                            float penetrationDepth = overlapY;
-
-                                            rB.boundObject.transform.position = rB.center + new Vector2(0, penetrationDepth);
-                                            rB.velocity.y *= -1;
-                                        }
+                                        rB.boundObject.transform.position = rB.center + new Vector2(overlapX, 0);
+                                        rB.velocity.x *= -1;
                                     }
-                                    else if (rB.isStatic)
+                                    else
                                     {
-                                        // Both bodies are static, no need for collision response in this case.
+                                        rB.boundObject.transform.position = rB.center + new Vector2(0, overlapY);
+                                        rB.velocity.y *= -1;
                                     }
                                 }
                             }
@@ -144,8 +125,8 @@ public class PhysicsWorld
                         {
                             // TODO: Implement AABBs vs Circle collision detection and response
 
-                            float closestX = Math.Max(rA.left, Math.Min(cB.center.x, rA.right));
-                            float closestY = Math.Max(rA.top, Math.Min(cB.center.y, rA.bottom));
+                            float closestX = MathF.Max(rA.left, MathF.Min(cB.center.x, rA.right));
+                            float closestY = MathF.Max(rA.top, MathF.Min(cB.center.y, rA.bottom));
                             Vector2 closestPoint = new(closestX, closestY);
 
                             float distanceSquared = cB.center.DistanceSquared(closestPoint);
@@ -171,16 +152,9 @@ public class PhysicsWorld
                                         rA.boundObject.transform.position = rA.center - collisionNormal * penetrationDepth;
                                     }
                                 }
-                                else if (rA.isStatic)
+                                else if (!cB.isStatic)
                                 {
-                                    if (!cB.isStatic)
-                                    {
-                                        cB.boundObject.transform.position = cB.center + collisionNormal * penetrationDepth;
-                                    }
-                                    else if (cB.isStatic)
-                                    {
-                                        // Nothing
-                                    }
+                                    cB.boundObject.transform.position = cB.center + collisionNormal * penetrationDepth;
                                 }
                             }
                             
@@ -193,8 +167,6 @@ public class PhysicsWorld
                     {
                         if (bodyB is CircleBody cB)
                         {
-                            // TODO: Implement Circle vs Circle collision detection and response
-
                             float distanceSquared = cA.center.DistanceSquared(cB.center);
                             float combinedRadius = cA.radius + cB.radius;
 
@@ -250,8 +222,8 @@ public class PhysicsWorld
                         {
                             // TODO: Implement Circle vs AABB collision detection and response
 
-                            float closestX = Math.Max(rB.left, Math.Min(cA.center.x, rB.right));
-                            float closestY = Math.Max(rB.top, Math.Min(cA.center.y, rB.bottom));
+                            float closestX = MathF.Max(rB.left, MathF.Min(cA.center.x, rB.right));
+                            float closestY = MathF.Max(rB.top, MathF.Min(cA.center.y, rB.bottom));
                             Vector2 closestPoint = new(closestX, closestY);
 
                             float distanceSquared = cA.center.DistanceSquared(closestPoint);
@@ -277,16 +249,9 @@ public class PhysicsWorld
                                         rB.boundObject.transform.position = rB.center - collisionNormal * penetrationDepth;
                                     }
                                 }
-                                else if (rB.isStatic)
+                                else if (!cA.isStatic)
                                 {
-                                    if (!cA.isStatic)
-                                    {
-                                        cA.boundObject.transform.position = cA.center + collisionNormal * penetrationDepth;
-                                    }
-                                    else if (cA.isStatic)
-                                    {
-                                        // Nothing
-                                    }
+                                    cA.boundObject.transform.position = cA.center + collisionNormal * penetrationDepth;
                                 }
                             }
 
@@ -323,7 +288,7 @@ public class PhysicsWorld
             }
             else if (body is CircleBody cBody && otherBody is RectangleBody rOtherBody)
             {
-                float closestX = Math.Max(rOtherBody.left, Math.Min(cBody.center.x, rOtherBody.right));
+                float closestX = MathF.Max(rOtherBody.left, MathF.Min(cBody.center.x, rOtherBody.right));
                 float distanceSquared = cBody.center.DistanceSquared(new Vector2(closestX, rOtherBody.top));
                 if (distanceSquared <= cBody.radius * cBody.radius && rOtherBody.top - epsilon <= cBody.center.y)
                 {
@@ -388,7 +353,7 @@ public class PhysicsWorld
             }
             else if (body is CircleBody cBody && otherBody is RectangleBody rOtherBody)
             {
-                float closestX = Math.Max(rOtherBody.left, Math.Min(cBody.center.x, rOtherBody.right));
+                float closestX = MathF.Max(rOtherBody.left, MathF.Min(cBody.center.x, rOtherBody.right));
                 float distanceSquared = cBody.center.DistanceSquared(new Vector2(closestX, rOtherBody.bottom));
                 if (distanceSquared <= cBody.radius * cBody.radius && rOtherBody.bottom - epsilon <= cBody.center.y)
                 {

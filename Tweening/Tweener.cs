@@ -31,10 +31,10 @@ public class Tweener<T> : TweenerBase
             Color startColor = (Color)(object)start!;
             Color endColor = (Color)(object)end!;
             Color interpolatedColor = Color.FromArgb(
-                (int)Math.Round(startColor.A + (endColor.A - startColor.A) * t),
-                (int)Math.Round(startColor.R + (endColor.R - startColor.R) * t),
-                (int)Math.Round(startColor.G + (endColor.G - startColor.G) * t),
-                (int)Math.Round(startColor.B + (endColor.B - startColor.B) * t)
+                (byte)Math.Round(startColor.A + (endColor.A - startColor.A) * t),
+                (byte)Math.Round(startColor.R + (endColor.R - startColor.R) * t),
+                (byte)Math.Round(startColor.G + (endColor.G - startColor.G) * t),
+                (byte)Math.Round(startColor.B + (endColor.B - startColor.B) * t)
             );
             return (T)(object)interpolatedColor;
         }

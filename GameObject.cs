@@ -29,11 +29,6 @@ public class GameObject {
         Log.Info($"GameObject \" {name} \" was registered!");
     }
 
-    ~GameObject()
-    {
-        Log.Info($"GameObject \" {name} \" was deleted!");
-    }
-
     public virtual void OnUpdate(double deltaTime) {}
     public virtual void OnDraw(Graphics graphics) {}
     public void UpdateComponents(double deltaTime)

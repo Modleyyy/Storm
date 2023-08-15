@@ -2,20 +2,9 @@ namespace Storm.Utils;
 
 public class MathHelper
 {
-    public static float Mod(float dividend, float divisor)
-    {
-        if (divisor == 0)
-        {
-            Logging.Log.Warning("Divisor cannot be zero.");
-            return 0;
-        }
-
-        return dividend - (float)Math.Floor(dividend / divisor) * divisor;
-    }
-
     public static float Lerp(float start, float end, float t)
     {
-        t = Math.Max(0, Math.Min(1, t));
+        t = MathF.Max(0, MathF.Min(1, t));
         return start + (end - start) * t;
     }
 
