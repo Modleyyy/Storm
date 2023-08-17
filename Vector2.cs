@@ -147,33 +147,6 @@ sealed public class Vector2
     }
     #endregion
 
-
-    #region DRY
-    public override string ToString()
-    {
-        return $"( X:{x} , Y:{y} )";
-    }
-    public override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(this, obj))
-        {
-            return true;
-        }
-
-        if (ReferenceEquals(obj, null))
-        {
-            return false;
-        }
-
-        throw new NotImplementedException();
-    }
-    public override int GetHashCode()
-    {
-        return (x.GetHashCode() + y.GetHashCode()) * new Random().Next();
-    }
-    #endregion
-
-
     #region Operators
     public static Vector2 operator +(Vector2 vec1, Vector2 vec2) {
         float x = vec1.x + vec2.x;
@@ -215,28 +188,16 @@ sealed public class Vector2
         float y = vec.y / i;
         return new Vector2(x, y);
     }
-    public static bool operator ==(Vector2 vec1, Vector2 vec2) {
-        return vec1.x == vec2.x && vec1.y == vec2.y;
-    }
-    public static bool operator !=(Vector2 vec1, Vector2 vec2) {
-        return vec1.x != vec2.x || vec1.y != vec2.y;
-    }
-    public static bool operator >(Vector2 vec1, Vector2 vec2) {
-        return vec1.x > vec2.x && vec1.y > vec2.y;
-    }
-    public static bool operator <(Vector2 vec1, Vector2 vec2) {
-        return vec1.x < vec2.x && vec1.y < vec2.y;
-    }
-    public static bool operator >=(Vector2 vec1, Vector2 vec2) {
-        return vec1.x >= vec2.x && vec1.y >= vec2.y;
-    }
-    public static bool operator <=(Vector2 vec1, Vector2 vec2) {
-        return vec1.x <= vec2.x && vec1.y <= vec2.y;
-    }
 
     public static explicit operator Vector2(Point v)
     {
         return new(v.X, v.Y);
     }
     #endregion
+
+
+    public override string ToString()
+    {
+        return $"( X:{x} , Y:{y} )";
+    }
 }

@@ -2,8 +2,6 @@ To fix:
 - When running the program, it has a chance to automatically close itself after the window is opened.
 
 To add:
-- Randomised stuff (Colors, Vectors, numbers, ect...)
-
 - Screen-reading shaders
 
 - Improve on the Physics Engine
