@@ -12,7 +12,7 @@ public abstract class PhysicsBody : Component
     public bool isStatic = false;
     public PhysicsWorld world;
 
-    public abstract void Draw(Graphics graphics, Color color, DrawMode drawMode);
+    public abstract void Draw(Graphics graphics, Color color, DrawMode drawMode = DrawMode.Border);
 
     public bool IsOnFloor()
     {

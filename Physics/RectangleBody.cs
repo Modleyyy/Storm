@@ -19,15 +19,16 @@ public class RectangleBody : PhysicsBody
         this.halfSize = new(halfWidth, halfHeight);
     }
 
-    public override void Draw(Graphics graphics, Color color, DrawMode drawMode)
+    public override void Draw(Graphics graphics, Color color, DrawMode drawMode = DrawMode.Border)
     {
-        if (drawMode == DrawMode.Border)
+        switch (drawMode)
         {
-            graphics.DrawRectangle(new Pen(color), center.x - halfSize.x, center.y - halfSize.y, halfSize.x*2, halfSize.y*2);
-        }
-        else if (drawMode == DrawMode.Fill)
-        {
-            graphics.FillRectangle(new SolidBrush(color), center.x - halfSize.x, center.y - halfSize.y, halfSize.x*2, halfSize.y*2);
+            case DrawMode.Border:
+                graphics.DrawRectangle(new Pen(color), center.x - halfSize.x, center.y - halfSize.y, halfSize.x*2, halfSize.y*2);
+                break;
+            case DrawMode.Fill:
+                graphics.FillRectangle(new SolidBrush(color), center.x - halfSize.x, center.y - halfSize.y, halfSize.x*2, halfSize.y*2);
+                break;
         }
     }
 }

@@ -9,7 +9,6 @@ using System.Drawing.Drawing2D;
 public class Particle
 {
     private readonly static Matrix emptyMatrix = new();
-    private readonly static Random r = new();
     private static TintShader t = new();
 
     private ParticleData data;
@@ -31,7 +30,7 @@ public class Particle
         this.position = position;
 
         float angle = MathHelper.DegToRad(data.angle);
-        angle += (r.NextSingle() * 0.75f - 0.375f) * 2.5f * data.angleVariance + (r.NextSingle() - 0.5f) * 0.25f * data.angleVariance;
+        angle += (RandomHelper.GetRandom().NextSingle() * 0.75f - 0.375f) * 2.5f * data.angleVariance + (RandomHelper.GetRandom().NextSingle() - 0.5f) * 0.25f * data.angleVariance;
 
         dir = new(+MathF.Sin(angle), -MathF.Cos(angle));
     }

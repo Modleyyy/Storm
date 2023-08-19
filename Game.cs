@@ -54,20 +54,20 @@ public abstract partial class Game
         {
             try
             {
-                window.BeginInvoke( delegate { window.Refresh(); } );
+                window.Invalidate();
                 double dt = stopwatch.Elapsed.TotalSeconds;
                 stopwatch.Restart();
-                OnUpdate(dt);
+                try { OnUpdate(dt); } catch {}
                 foreach (GameObject obj in gameObjectsUpdate)
                 {
-                    obj.OnUpdate(dt);
-                    obj.UpdateComponents(dt);
+                    try { obj.OnUpdate        (dt); } catch {}
+                    try { obj.UpdateComponents(dt); } catch {}
+                    
                 }
                 Thread.Sleep(1000/FPS);
             }
             catch
             {
-                Log.Error("Can't find game!");
                 Application.Exit();
                 break;
             }

@@ -1,0 +1,10 @@
+To fix:
+
+To add:
+- Screen-reading shaders
+
+- Improve on the Physics Engine
+    - Collision layers and masks
+    - Better performance
+    - Better accuracy
+    - More stuff (Rotated boxes, polygons, ellipses, ect...)
