@@ -62,7 +62,6 @@ public abstract partial class Game
                 {
                     try { obj.OnUpdate        (dt); } catch {}
                     try { obj.UpdateComponents(dt); } catch {}
-                    
                 }
                 Thread.Sleep(1000/FPS);
             }
