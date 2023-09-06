@@ -1,7 +1,5 @@
 namespace Storm;
 
-using Logging;
-
 using System.Drawing.Drawing2D;
 using System.Text.Json;
 using System.Diagnostics;
@@ -61,8 +59,7 @@ public abstract partial class Game
                 foreach (GameObject obj in gameObjectsUpdate)
                 {
                     try { obj.OnUpdate        (dt); } catch {}
-                    try { obj.UpdateComponents(dt); } catch {}
-                    
+                    obj.UpdateComponents(dt);
                 }
                 Thread.Sleep(1000/FPS);
             }

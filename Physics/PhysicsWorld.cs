@@ -37,13 +37,13 @@ public class PhysicsWorld
             Parallel.For(0, bodies.Count, i =>
             {
                 PhysicsBody bodyA = bodies[i];
+                if (bodyA.isStatic)
+                    return;
+
                 Parallel.For(0, bodies.Count, y =>
                 {
                     if (i == y)
-                    {
-                        // Return since the two bodies are the same
                         return;
-                    }
 
                     PhysicsBody bodyB = bodies[y];
                     
@@ -54,65 +54,39 @@ public class PhysicsWorld
                             bool isColliding = rA.right >= rB.left && rA.left <= rB.right && rA.bottom >= rB.top && rA.top <= rB.bottom;
                             if (isColliding)
                             {
-                                if (!rA.isStatic)
+                                float overlapX = MathF.Min(rA.right - rB.left, rB.right - rA.left);
+                                float overlapY = MathF.Min(rA.bottom - rB.top, rB.bottom - rA.top);
+
+                                if (overlapX < overlapY)
                                 {
                                     if (!rB.isStatic)
                                     {
-                                        float overlapX = MathF.Min(rA.right - rB.left, rB.right - rA.left);
-                                        float overlapY = MathF.Min(rA.bottom - rB.top, rB.bottom - rA.top);
-
-                                        if (overlapX < overlapY)
-                                        {
-                                            float separation = overlapX / 2f;
-
-                                            rA.boundObject.transform.position = rA.center - new Vector2(separation, 0);
-                                            rB.boundObject.transform.position = rB.center + new Vector2(separation, 0);
-
-                                            rA.velocity.x *= -1;
-                                            rB.velocity.x *= -1;
-                                        }
-                                        else
-                                        {
-                                            float separation = overlapY / 2f;
-
-                                            rA.boundObject.transform.position = rA.center - new Vector2(0, separation);
-                                            rB.boundObject.transform.position = rB.center + new Vector2(0, separation);
-
-                                            rA.velocity.y *= -1;
-                                            rB.velocity.y *= -1;
-                                        }
-                                    }
-                                    else if (rB.isStatic)
-                                    {
-                                        float overlapX = MathF.Min(rA.right - rB.left, rB.right - rA.left);
-                                        float overlapY = MathF.Min(rA.bottom - rB.top, rB.bottom - rA.top);
-
-                                        if (overlapX < overlapY)
-                                        {
-                                            rA.boundObject.transform.position = rA.center - new Vector2(overlapX, 0);
-                                            rA.velocity.x *= -1;
-                                        }
-                                        else
-                                        {
-                                            rA.boundObject.transform.position = rA.center - new Vector2(0, overlapY);
-                                            rA.velocity.y *= -1;
-                                        }
-                                    }
-                                }
-                                else if (!rB.isStatic)
-                                {
-                                    float overlapX = MathF.Min(rA.right - rB.left, rB.right - rA.left);
-                                    float overlapY = MathF.Min(rA.bottom - rB.top, rB.bottom - rA.top);
-
-                                    if (overlapX < overlapY)
-                                    {
-                                        rB.boundObject.transform.position = rB.center + new Vector2(overlapX, 0);
-                                        rB.velocity.x *= -1;
+                                        float seperation = overlapX/2;
+                                        rA.boundObject.transform.xPos -= seperation;
+                                        rB.boundObject.transform.xPos += seperation;
                                     }
                                     else
                                     {
-                                        rB.boundObject.transform.position = rB.center + new Vector2(0, overlapY);
-                                        rB.velocity.y *= -1;
+                                        if (rA.boundObject.transform.xPos < rB.boundObject.transform.xPos)
+                                            rA.boundObject.transform.xPos -= overlapX;
+                                        else
+                                            rA.boundObject.transform.xPos += overlapX;
+                                    }
+                                }
+                                else
+                                {
+                                    if (!rB.isStatic)
+                                    {
+                                        float seperation = overlapY/2;
+                                        rA.boundObject.transform.yPos -= seperation;
+                                        rB.boundObject.transform.yPos += seperation;
+                                    }
+                                    else
+                                    {
+                                        if (rA.boundObject.transform.yPos < rB.boundObject.transform.yPos)
+                                            rA.boundObject.transform.yPos -= overlapY;
+                                        else
+                                            rA.boundObject.transform.yPos += overlapY;
                                     }
                                 }
                             }
@@ -123,8 +97,6 @@ public class PhysicsWorld
         
                         if (bodyB is CircleBody cB)
                         {
-                            // TODO: Implement AABBs vs Circle collision detection and response
-
                             float closestX = MathF.Max(rA.left, MathF.Min(cB.center.x, rA.right));
                             float closestY = MathF.Max(rA.top, MathF.Min(cB.center.y, rA.bottom));
                             Vector2 closestPoint = new(closestX, closestY);
@@ -139,22 +111,15 @@ public class PhysicsWorld
 
                                 float penetrationDepth = cB.radius - MathF.Sqrt(distanceSquared);
 
-                                if (!rA.isStatic)
+                                if (!cB.isStatic)
                                 {
-                                    if (!cB.isStatic)
-                                    {
-                                        float separation = penetrationDepth / 2f;
-                                        rA.boundObject.transform.position = rA.center - collisionNormal * separation;
-                                        cB.boundObject.transform.position = cB.center + collisionNormal * separation;
-                                    }
-                                    else if (cB.isStatic)
-                                    {
-                                        rA.boundObject.transform.position = rA.center - collisionNormal * penetrationDepth;
-                                    }
+                                    float separation = penetrationDepth / 2f;
+                                    rA.boundObject.transform.position = rA.center - collisionNormal * separation;
+                                    cB.boundObject.transform.position = cB.center + collisionNormal * separation;
                                 }
-                                else if (!cB.isStatic)
+                                else if (cB.isStatic)
                                 {
-                                    cB.boundObject.transform.position = cB.center + collisionNormal * penetrationDepth;
+                                    rA.boundObject.transform.position = rA.center - collisionNormal * penetrationDepth;
                                 }
                             }
                             
@@ -174,44 +139,25 @@ public class PhysicsWorld
 
                             if (isColliding)
                             {
-                                if (!cA.isStatic)
+                                if (!cB.isStatic)
                                 {
-                                    if (!cB.isStatic)
-                                    {
-                                        Vector2 collisionNormal = cB.center - cA.center;
-                                        collisionNormal.Normalize();
+                                    Vector2 collisionNormal = cB.center - cA.center;
+                                    collisionNormal.Normalize();
 
-                                        float penetrationDepth = combinedRadius - cA.center.Distance(cB.center);
+                                    float penetrationDepth = combinedRadius - cA.center.Distance(cB.center);
 
-                                        float separation = penetrationDepth / 2f;
-                                        cA.boundObject.transform.position = cA.center - collisionNormal * separation;
-                                        cB.boundObject.transform.position = cB.center + collisionNormal * separation;
-                                    }
-                                    else if (cB.isStatic)
-                                    {
-                                        Vector2 collisionNormal = cB.center - cA.center;
-                                        collisionNormal.Normalize();
-
-                                        float penetrationDepth = combinedRadius - cA.center.Distance(cB.center);
-
-                                        cA.boundObject.transform.position = cA.center - collisionNormal * penetrationDepth;
-                                    }
+                                    float separation = penetrationDepth / 2f;
+                                    cA.boundObject.transform.position = cA.center - collisionNormal * separation;
+                                    cB.boundObject.transform.position = cB.center + collisionNormal * separation;
                                 }
-                                else if (cA.isStatic)
+                                else if (cB.isStatic)
                                 {
-                                    if (!cB.isStatic)
-                                    {
-                                        Vector2 collisionNormal = cB.center - cA.center;
-                                        collisionNormal.Normalize();
+                                    Vector2 collisionNormal = cB.center - cA.center;
+                                    collisionNormal.Normalize();
 
-                                        float penetrationDepth = combinedRadius - cA.center.Distance(cB.center);
+                                    float penetrationDepth = combinedRadius - cA.center.Distance(cB.center);
 
-                                        cB.boundObject.transform.position = cB.center - collisionNormal * penetrationDepth;
-                                    }
-                                    else if (cB.isStatic)
-                                    {
-                                        // Empty since there's no need for Static vs Static collisions
-                                    }
+                                    cA.boundObject.transform.position = cA.center - collisionNormal * penetrationDepth;
                                 }
                             }
 
@@ -220,8 +166,6 @@ public class PhysicsWorld
 
                         else if (bodyB is RectangleBody rB)
                         {
-                            // TODO: Implement Circle vs AABB collision detection and response
-
                             float closestX = MathF.Max(rB.left, MathF.Min(cA.center.x, rB.right));
                             float closestY = MathF.Max(rB.top, MathF.Min(cA.center.y, rB.bottom));
                             Vector2 closestPoint = new(closestX, closestY);
@@ -236,22 +180,15 @@ public class PhysicsWorld
 
                                 float penetrationDepth = cA.radius - MathF.Sqrt(distanceSquared);
 
-                                if (!rB.isStatic)
+                                if (!cA.isStatic)
                                 {
-                                    if (!cA.isStatic)
-                                    {
-                                        float separation = penetrationDepth / 2f;
-                                        rB.boundObject.transform.position = rB.center - collisionNormal * separation;
-                                        cA.boundObject.transform.position = cA.center + collisionNormal * separation;
-                                    }
-                                    else if (cA.isStatic)
-                                    {
-                                        rB.boundObject.transform.position = rB.center - collisionNormal * penetrationDepth;
-                                    }
+                                    float separation = penetrationDepth / 2f;
+                                    rB.boundObject.transform.position = rB.center - collisionNormal * separation;
+                                    cA.boundObject.transform.position = cA.center + collisionNormal * separation;
                                 }
-                                else if (!cA.isStatic)
+                                else if (cA.isStatic)
                                 {
-                                    cA.boundObject.transform.position = cA.center + collisionNormal * penetrationDepth;
+                                    rB.boundObject.transform.position = rB.center - collisionNormal * penetrationDepth;
                                 }
                             }
 

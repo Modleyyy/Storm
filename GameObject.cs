@@ -34,7 +34,7 @@ public class GameObject {
     public void UpdateComponents(double deltaTime)
     {
         foreach (Component comp in components)
-            if (comp.isActive) comp.OnUpdate(deltaTime);
+            if (comp.isActive) try { comp.OnUpdate(deltaTime); } catch {}
     }
 
     public void AddComponent(Component component)

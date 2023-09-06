@@ -8,7 +8,7 @@ public class Tween : Component
 
     public override void OnUpdate(double deltaTime)
     {
-        Parallel.For(0, tweeners.Count, i =>
+        for (int i = 0; i < tweeners.Count; i++)
         {
             TweenerBase tweener = tweeners[i];
             double t = tweener.Update(deltaTime);
@@ -17,7 +17,7 @@ public class Tween : Component
                 tweener.isFinished = true;
                 tweener.onComplete();
             }
-        });
+        }
         tweeners.RemoveAll( t => t.isFinished );
     }
 
