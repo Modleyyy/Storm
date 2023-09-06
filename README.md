@@ -20,7 +20,7 @@ git pull
 
 You'll get a simple project with a little Player.cs GameObject, a GameData.json file, an icon, a Usings.cs to put global usings into, a Storm folder with all of the code of the framework, and finally a sample MyGame.cs file to get you truly started!
 
-You could also make a project from scratch but uh... preferably... don't do that? Or something? Are you okay?? Why would you even do that!?!?!? If you still want to do that (weirdo), [here's a tutorial on that](https://github.com/Modleyyy/Storm/wiki/GetStarted/#create-a-project-from-scratch)!
+You could also make a project from scratch but uh... preferably... don't do that? Or something? Are you okay?? Why would you even do that!?!?!? If you still want to do that (weirdo), [here's a tutorial on that](https://github.com/Modleyyy/Storm/wiki/Get-Started#create-a-project-from-scratch)!
 
 Talking about GameObjects, Storm uses a simple GameObject -> Component system. You create GameObject by inheritting the GameObject class, give 'em some code, give 'em some Components, and instanciate 'em!
 ``` csharp
