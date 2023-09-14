@@ -1,5 +1,7 @@
 namespace Storm.Physics;
 
+using System.Collections.Generic;
+
 public class PhysicsWorld
 {
     public readonly Vector2 gravity;
@@ -18,32 +20,27 @@ public class PhysicsWorld
 
     public void Update(double deltaTime)
     {
-        const int substeps = 2;
+        const byte substeps = 2;
         deltaTime /= substeps;
-        for (int i = 0; i < substeps; i++)
-        {
-            // Movement
-            Parallel.For(0, bodies.Count, i =>
-            {
-                PhysicsBody body = bodies[i];
-                if (!body.isStatic)
-                {
-                    body.velocity += gravity;
-                    body.boundObject.transform.position += body.velocity * (float)deltaTime;
-                }
-            });
 
-            // Collision detection and response
-            Parallel.For(0, bodies.Count, i =>
+        ReadOnlySpan<PhysicsBody> bodies = this.bodies.ToArray().AsSpan();
+
+        for (byte x = 0; x < substeps; x++)
+        {
+            for (short i = 0; i < bodies.Length; i++)
             {
                 PhysicsBody bodyA = bodies[i];
-                if (bodyA.isStatic)
-                    return;
 
-                Parallel.For(0, bodies.Count, y =>
+                if (bodyA.isStatic)
+                    continue;
+
+                bodyA.velocity += gravity;
+                bodyA.boundObject.transform.position += bodyA.velocity * (float)deltaTime;
+
+                for (short y = 0; y < bodies.Length; y++)
                 {
                     if (i == y)
-                        return;
+                        continue;
 
                     PhysicsBody bodyB = bodies[y];
                     
@@ -92,7 +89,7 @@ public class PhysicsWorld
                             }
 
                             // Continue the loop once the collision stuff is done
-                            return;
+                            continue;
                         }
         
                         if (bodyB is CircleBody cB)
@@ -124,7 +121,7 @@ public class PhysicsWorld
                             }
                             
                             // Continue the loop once the collision stuff is done
-                            return;
+                            continue;
                         }
                     }
 
@@ -161,7 +158,7 @@ public class PhysicsWorld
                                 }
                             }
 
-                            return;
+                            continue;
                         }
 
                         else if (bodyB is RectangleBody rB)
@@ -193,11 +190,11 @@ public class PhysicsWorld
                             }
 
                             // Continue the loop once the collision stuff is done
-                            return;
+                            continue;
                         }
                     }
-                });
-            });
+                }
+            }
         }
     }
 

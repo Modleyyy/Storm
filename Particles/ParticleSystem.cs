@@ -45,11 +45,11 @@ public class ParticleSystem : Component
         {
             currentInterval = 0;
             Vector2 center = boundObject.transform.position + offset;
-            Parallel.For(0, data.count, i => 
+            for(short i = 0; i < data.count; i++)
             {
                 Particle p = GetOrCreateParticle(center);
                 particles.Add(p);
-            });
+            }
         }
 
         particles.RemoveAll(p =>
@@ -65,11 +65,11 @@ public class ParticleSystem : Component
             return false;
         });
 
-        Parallel.For(0, particles.Count, i =>
+        for(short i = 0; i < particles.Count; i++)
         {
             Particle p = particles[i];
             p.Update(deltaTime);
-        });
+        }
     }
 
     public void Draw(Graphics graphics)
