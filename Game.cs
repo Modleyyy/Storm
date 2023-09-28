@@ -11,6 +11,8 @@ public abstract partial class Game
     private GameData data;
     private Stopwatch stopwatch;
 
+    private bool isGameActive;
+
     public Game()
     {
         string t = File.ReadAllText(Path.Combine(GetRootFolderPath(), "GameData.json"));
@@ -26,14 +28,16 @@ public abstract partial class Game
 
         window.Paint += Renderer;
         
-        window.FormClosed += (sender, e) =>
-        {
-            Application.Exit();
-        };
-
         stopwatch = new();
 
+        isGameActive = true;
         gameLoop = new Thread(GameLoop);
+        
+        window.FormClosed += (sender, e) =>
+        {
+            Exit();
+        };
+
     }
 
     public void Run()
@@ -48,7 +52,7 @@ public abstract partial class Game
     private void GameLoop()
     {
         OnLoad();
-        while (gameLoop.IsAlive)
+        while (isGameActive)
         {
             try
             {
@@ -65,7 +69,7 @@ public abstract partial class Game
             }
             catch
             {
-                Application.Exit();
+                Exit();
                 break;
             }
         }   
@@ -92,4 +96,10 @@ public abstract partial class Game
     public abstract void OnLoad();
     public abstract void OnUpdate(double deltaTime);
     public abstract void OnDraw(Graphics graphics);
+
+    public void Exit() 
+    {
+        isGameActive = false;
+        Application.Exit();
+    }
 }
