@@ -66,8 +66,8 @@ public class Particle
             }
             else
             {
-                float centerX = position.x + scale / 2;
-                float centerY = position.y + scale / 2;
+                float centerX = position.x + scale * 0.5f;
+                float centerY = position.y + scale * 0.5f;
                 using (Matrix transform = new())
                 {
                     transform.RotateAt(rotation, new PointF(centerX, centerY));
@@ -95,8 +95,8 @@ public class Particle
             }
             else
             {
-                float centerX = position.x + size.x / 2;
-                float centerY = position.y + size.y / 2;
+                float centerX = position.x + size.x * 0.5f;
+                float centerY = position.y + size.y * 0.5f;
                 using (Matrix transform = new())
                 {
                     transform.RotateAt(rotation, new PointF(centerX, centerY));

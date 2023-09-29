@@ -8,19 +8,27 @@ public class AnimatedSprite2D : Sprite2D
     public new bool isActive = true;
 
     public Signal animationStarted = new();
-    public Signal<AnimationDelegate> animationFinished = new();
+    public Signal<AnimationEndedDelegate> animationFinished = new();
     public Signal<FrameChangedDelegate> frameChanged = new();
 
     private readonly Dictionary<string, Animation> animations;
-    public string currentAnimation;
+    private string _cur = "";
+    public string currentAnimation {
+        set {
+            _cur = value;
+            interval = Game.FPS / animations[value].FPS;
+        }
+        get => _cur;
+    }
     public int currentFrame;
     private int frameTimer;
+    private int interval;
 
     public AnimatedSprite2D(string path, Dictionary<string, Animation> animations, Vector2? offset = null, bool centered = false)
             : base(path, offset, centered)
     {
         this.animations = animations;
-        currentAnimation = "";
+        _cur = "";
         currentFrame = 0;
         frameTimer = 0;
 
@@ -29,9 +37,9 @@ public class AnimatedSprite2D : Sprite2D
 
     public void PlayAnimation(string animationName, int from = 0)
     {
-        if (currentAnimation != animationName)
+        if (_cur != animationName)
         {
-            currentAnimation = animationName;
+            _cur = animationName;
             animationStarted.Emit();
             currentFrame = from;
             frameTimer = 0;
@@ -39,11 +47,11 @@ public class AnimatedSprite2D : Sprite2D
     }
     public override void OnUpdate(double deltaTime)
     {
-        if (currentAnimation != "" && animations!.ContainsKey(currentAnimation))
+        if (_cur != "" && animations!.ContainsKey(_cur))
         {
-            Animation animation = animations[currentAnimation];
+            Animation animation = animations[_cur];
             frameTimer++;
-            if (frameTimer >= Game.FPS / animation.FPS)
+            if (frameTimer >= interval)
             {
                 frameTimer = 0;
                 frameChanged.Emit(currentFrame, currentFrame++);
@@ -67,9 +75,9 @@ public class AnimatedSprite2D : Sprite2D
 
     protected override Bitmap GetSprite()
     {
-        if (currentAnimation != "" && animations.ContainsKey(currentAnimation))
+        if (_cur != "" && animations.ContainsKey(_cur))
         {
-            Animation animation = animations[currentAnimation];
+            Animation animation = animations[_cur];
             if (currentFrame >= 0 && currentFrame < animation.numFrames)
             {
                 return animation.frames[currentFrame];
@@ -78,6 +86,6 @@ public class AnimatedSprite2D : Sprite2D
         return sprite;
     }
 
-    public delegate void AnimationDelegate(bool looping);
+    public delegate void AnimationEndedDelegate(bool looping);
     public delegate void FrameChangedDelegate(int currentFrame, int lastFrame);
 }

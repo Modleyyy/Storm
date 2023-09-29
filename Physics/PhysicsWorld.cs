@@ -110,7 +110,7 @@ public class PhysicsWorld
 
                                 if (!cB.isStatic)
                                 {
-                                    float separation = penetrationDepth / 2f;
+                                    float separation = penetrationDepth * 0.5f;
                                     rA.boundObject.transform.position = rA.center - collisionNormal * separation;
                                     cB.boundObject.transform.position = cB.center + collisionNormal * separation;
                                 }
@@ -143,7 +143,7 @@ public class PhysicsWorld
 
                                     float penetrationDepth = combinedRadius - cA.center.Distance(cB.center);
 
-                                    float separation = penetrationDepth / 2f;
+                                    float separation = penetrationDepth * 0.5f;
                                     cA.boundObject.transform.position = cA.center - collisionNormal * separation;
                                     cB.boundObject.transform.position = cB.center + collisionNormal * separation;
                                 }
@@ -179,7 +179,7 @@ public class PhysicsWorld
 
                                 if (!cA.isStatic)
                                 {
-                                    float separation = penetrationDepth / 2f;
+                                    float separation = penetrationDepth * 0.5f;
                                     rB.boundObject.transform.position = rB.center - collisionNormal * separation;
                                     cA.boundObject.transform.position = cA.center + collisionNormal * separation;
                                 }

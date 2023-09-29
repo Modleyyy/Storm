@@ -70,10 +70,10 @@ sealed public class Vector2
 
     public void SetAngle(float angle)
     {
-        float length = GetLength();
+        float l = GetLength();
         float radian = MathHelper.DegToRad(angle);
-        float x = length * MathF.Cos(radian);
-        float y = length * MathF.Sin(radian);
+        float x = l * MathF.Cos(radian);
+        float y = l * MathF.Sin(radian);
 
         this.x = x;
         this.y = y;
@@ -81,8 +81,9 @@ sealed public class Vector2
 
     public void Normalize()
     {
-        float x = this.x / GetLength();
-        float y = this.y / GetLength();
+        float l = GetLength();
+        float x = this.x / l;
+        float y = this.y / l;
         if (float.IsNaN(x) || float.IsNaN(y))
         {
             this.x = 0;
@@ -95,8 +96,9 @@ sealed public class Vector2
 
     public Vector2 Normalized()
     {
-        float x = this.x / GetLength();
-        float y = this.y / GetLength();
+        float l = GetLength();
+        float x = this.x / l;
+        float y = this.y / l;
         if (float.IsNaN(x) || float.IsNaN(y))
         {
             return new();
@@ -106,14 +108,12 @@ sealed public class Vector2
 
     public float Distance(Vector2 to)
     {
-        Vector2 d = (this - to).Abs();
-        return d.GetLength();
+        return (this - to).Abs().GetLength();
     }
 
     public float DistanceSquared(Vector2 to)
     {
-        Vector2 d = (this - to).Abs();
-        return d.GetLengthSquared();
+        return (this - to).Abs().GetLengthSquared();
     }
 
     public Vector2 Abs()

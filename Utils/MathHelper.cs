@@ -23,11 +23,13 @@ public class MathHelper
 
     public static float RadToDeg(float radians)
     {
-        return radians * (180 / MathF.PI);
+        const float r2d = 180 / MathF.PI;
+        return radians * r2d;
     }
 
     public static float DegToRad(float degrees)
     {
-        return degrees * (MathF.PI / 180);
+        const float d2r = MathF.PI / 180;
+        return degrees * d2r;
     }
 }

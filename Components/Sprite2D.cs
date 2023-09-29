@@ -45,7 +45,7 @@ public class Sprite2D : Component
         if (flippedH) size.x *= -1;
         if (flippedV) size.y *= -1;
 
-        if (centered) pos -= size / 2;
+        if (centered) pos -= size * 0.5f;
 
         if (shader is not null)
         {
@@ -57,8 +57,8 @@ public class Sprite2D : Component
                 shadedSpr = s.ShadeImage(shadedSpr);
             }
     
-            float centerX = pos.x + size.x / 2;
-            float centerY = pos.y + size.y / 2;
+            float centerX = pos.x + size.x * 0.5f;
+            float centerY = pos.y + size.y * 0.5f;
         
             if (boundObject.transform.rotation == 0)
             {
@@ -90,8 +90,8 @@ public class Sprite2D : Component
                 tintedSpr = t.ShadeImage(spr);
             }
         
-            float centerX = pos.x + size.x / 2;
-            float centerY = pos.y + size.y / 2;
+            float centerX = pos.x + size.x * 0.5f;
+            float centerY = pos.y + size.y * 0.5f;
 
             if (boundObject.transform.rotation == 0)
             {
