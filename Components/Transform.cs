@@ -69,20 +69,20 @@ public class Transform : Component
         this.rotation = 0f;
     }
     
-    public Transform(Vector2 position, Vector2 scale, float? rotation = null)
+    public Transform(Vector2 position, Vector2 scale, float rotation = 0)
     {
         this.position = position;
         this.scale = scale;
-        this.rotation = rotation ?? 0;
+        this.rotation = rotation;
     }
     
-    public Transform(float? xPos = null, float? yPos = null, float? width = null, float? height = null, float? rotation = null)
+    public Transform(float xPos = 0, float yPos = 0, float width = 1, float height = 1, float rotation = 0)
     {
-        this.xPos     = xPos     ?? 0;
-        this.yPos     = yPos     ?? 0;
-        this.width    = width    ?? 1;
-        this.height   = height   ?? 1;
-        this.rotation = rotation ?? 0;
+        this.xPos     = xPos;
+        this.yPos     = yPos;
+        this.width    = width;
+        this.height   = height;
+        this.rotation = rotation;
     }
 
     public override string ToString()
