@@ -11,7 +11,7 @@ The word "*Tween*" comes from "*BeTWEEN*", and is the concept of making a value 
 In Storm, there is a wide library of built-in easings that you can access from the `Storm.Tweening.Easings` static class, in all of their 4 forms. (In, Out, In Out, and Out In) If this is still not enough, you can make your own easings using `Easings.CreateEasing(p1x, p1y, p2x, p2y)`. `p1x` and `p1y` represent the first control point's position (they must be between 0 and 1), and the same is for `p2x` and `p2y`. "How do you get these values", you say? Well it's easy! You can use a website that does that just for you, for example [cubic-bezier.com](https://cubic-bezier.com)!
 
 ## Using Tweens in Storm
-Now that we know WHAT is a tween, we can easily make one! Start by making a GameObject that uses this tween. In the file, don't forget to add a `using Storm.Tweening` at the start of the file, or a `global using` in Usings.cs! We will then give the object the Tween component like this:
+Now that we know WHAT is a tween, we can easily make one! Start by making a GameObject that uses this tween. In the file, don't forget to add a `using Storm.Tweening` at the start of the file, or a `global using` in Usings.cs! We then add the Tween component to the object like any other component:
 ```csharp
 namespace TweenTutorial;
 
