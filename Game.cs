@@ -35,7 +35,9 @@ public abstract partial class Game
         
         window.FormClosed += (sender, e) =>
         {
-            Exit();
+            // exit
+            isGameActive = false;
+            Application.Exit();
         };
 
     }
@@ -69,7 +71,9 @@ public abstract partial class Game
             }
             catch
             {
-                Exit();
+                // exit
+                isGameActive = false;
+                Application.Exit();
                 break;
             }
         }   
@@ -96,10 +100,4 @@ public abstract partial class Game
     public abstract void OnLoad();
     public abstract void OnUpdate(double deltaTime);
     public abstract void OnDraw(Graphics graphics);
-
-    public void Exit() 
-    {
-        isGameActive = false;
-        Application.Exit();
-    }
 }
