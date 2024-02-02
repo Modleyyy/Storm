@@ -15,7 +15,7 @@ public class GameObject {
     public bool visible = true;
     public Color tint = Color.White;
 
-    public GameObject(string name , Transform transform, string[] tags = null!, bool visible = true)
+    public GameObject(string name, Transform transform, string[] tags = null!, bool visible = true)
     {
         this.name = name;
         AddComponent(transform);
