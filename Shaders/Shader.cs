@@ -1,11 +1,18 @@
-namespace Storm.Shaders;
-
-using System.Drawing;
 using System.Drawing.Imaging;
 
-public interface IPixelShader
+namespace Storm.Shaders;
+
+public delegate Color PixelShaderDelegate<TArgs>(Color pixelColor, Vector2 uv, Vector2 coords, Vector2 texSize, TArgs args);
+public delegate Color PixelShaderDelegate(Color pixelColor, Vector2 uv, Vector2 coords, Vector2 texSize);
+
+public static class Shader
 {
-    public Bitmap ShadeImage(Bitmap imageToShade)
+    public static Bitmap ShadeImage(Bitmap imageToShade, PixelShaderDelegate shader)
+    {
+        return ShadeImage<byte>(imageToShade, (pixelColor, uv, coords, texSize, args) => shader(pixelColor, uv, coords, texSize), 0);
+    }
+
+    public static Bitmap ShadeImage<TArgs>(Bitmap imageToShade, PixelShaderDelegate<TArgs> shader, TArgs args)
     {
         int width = imageToShade.Width;
         int height = imageToShade.Height;
@@ -43,7 +50,7 @@ public interface IPixelShader
                     coords.x = x;
                     uv.x = coords.x / texSize.x;
 
-                    Color shadedColor = ShaderCode(pixelColor, uv, coords, texSize);
+                    Color shadedColor = shader(pixelColor, uv, coords, texSize, args);
 
                     row[offset] = shadedColor.B;
                     row[offset + 1] = shadedColor.G;
@@ -57,7 +64,4 @@ public interface IPixelShader
 
         return shadedImage;
     }
-
-
-    protected abstract Color ShaderCode(Color pixelColor, Vector2 uv, Vector2 coords, Vector2 texSize);
 }
