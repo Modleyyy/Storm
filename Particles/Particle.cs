@@ -2,14 +2,12 @@ namespace Storm.Particles;
 
 using Utils;
 using Shaders;
-using Shaders.BuiltInShaders;
 
 using System.Drawing.Drawing2D;
 
 public class Particle
 {
     private readonly static Matrix emptyMatrix = new();
-    private static TintShader t = new();
 
     private ParticleData data;
 
@@ -83,9 +81,8 @@ public class Particle
 
             if (color != Color.White)
             {
-                t.tint = color;
-                IPixelShader s = t;
-                spr = s.ShadeImage(spr);
+                BasicShaders.TintShaderArgs targs = new() { tint = color, };
+                spr = Shader.ShadeImage(spr, BasicShaders.Tint, targs);
             }
 
             Vector2 size = new(spr.Width * scale,spr.Height * scale);
