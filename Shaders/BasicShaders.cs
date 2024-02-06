@@ -17,7 +17,7 @@ static class BasicShaders {
             return pixelColor;
         }
 
-        Color flashedColor = Shaders.ShaderHelpers.Mix(pixelColor, args.color, args.amount);
+        Color flashedColor = ShaderHelpers.Mix(pixelColor, args.color, args.amount);
         flashedColor = Color.FromArgb(flashedColor.A * pixelColor.A / 255, flashedColor);
         return flashedColor;
     };
