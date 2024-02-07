@@ -54,15 +54,12 @@ public class ParticleSystem : Component
 
         particles.RemoveAll(p =>
         {
-            if (p.isDead)
+            if (p.isDead && particlePool.Count < data.maxParticles)
             {
-                if (particlePool.Count < data.maxParticles)
-                {
-                    particlePool.Enqueue(p);
-                }
-                return true;
+                particlePool.Enqueue(p);
             }
-            return false;
+
+            return p.isDead;
         });
 
         for(short i = 0; i < particles.Count; i++)

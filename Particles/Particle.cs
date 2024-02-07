@@ -28,7 +28,7 @@ public class Particle
         this.position = position;
 
         float angle = MathHelper.DegToRad(data.angle);
-        angle += (RandomHelper.GetRandom().NextSingle() * 0.75f - 0.375f) * 2.5f * data.angleVariance + (RandomHelper.GetRandom().NextSingle() - 0.5f) * 0.25f * data.angleVariance;
+        angle += RandomHelper.RandomFloat(-0.375f, 0.375f) * 2.5f * data.angleVariance + RandomHelper.RandomFloat(-0.5f, 0.5f) * 0.25f * data.angleVariance;
 
         dir = new(+MathF.Sin(angle), -MathF.Cos(angle));
     }
@@ -58,19 +58,20 @@ public class Particle
     {
         if (data.texture is null)
         {
+            float halfscale = scale * .5f;
             if (rotation == 0)
             {
-                graphics.FillRectangle(new SolidBrush(color), new RectangleF(position.x - scale/2, position.y - scale/2, scale, scale));
+                graphics.FillRectangle(new SolidBrush(color), new RectangleF(position.x - halfscale, position.y - halfscale, scale, scale));
             }
             else
             {
-                float centerX = position.x + scale * 0.5f;
-                float centerY = position.y + scale * 0.5f;
+                float centerX = position.x + halfscale;
+                float centerY = position.y + halfscale;
                 using (Matrix transform = new())
                 {
                     transform.RotateAt(rotation, new PointF(centerX, centerY));
                     graphics.Transform = transform;
-                    graphics.FillRectangle(new SolidBrush(color), new RectangleF(position.x - scale/2, position.y - scale/2, scale, scale));
+                    graphics.FillRectangle(new SolidBrush(color), new RectangleF(position.x - halfscale, position.y - halfscale, scale, scale));
                 }
                 graphics.Transform = new();
             }
@@ -86,9 +87,10 @@ public class Particle
             }
 
             Vector2 size = new(spr.Width * scale,spr.Height * scale);
+            Vector2 halfsize = size * .5f;
             if (rotation == 0)
             {
-                graphics.DrawImage(spr, new RectangleF(position.x - size.x/2, position.y - size.y/2, size.x, size.y));
+                graphics.DrawImage(spr, new RectangleF(position.x - halfsize.x, position.y - halfsize.y, size.x, size.y));
             }
             else
             {
@@ -98,7 +100,7 @@ public class Particle
                 {
                     transform.RotateAt(rotation, new PointF(centerX, centerY));
                     graphics.Transform = transform;
-                    graphics.DrawImage(spr, new RectangleF(position.x - size.x/2, position.y - size.y/2, size.x, size.y));
+                    graphics.DrawImage(spr, new RectangleF(position.x - halfsize.x, position.y - halfsize.y, size.x, size.y));
                 }
                 graphics.Transform = emptyMatrix;
             }
