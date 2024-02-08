@@ -36,7 +36,7 @@ public class Sprite2D : Component
     public void Draw(Graphics graphics, PixelShaderDelegate? shader = null)
     {
         if (shader is not null)
-            Draw<byte>(graphics, (Color pixelColor, Vector2 uv, Vector2 coords, Vector2 texSize, byte args) => shader(pixelColor, uv, coords, texSize), 0);
+            Draw<byte>(graphics, (Color pixelColor, Vector2 uv, Vector2 coords, Bitmap texture, byte args) => shader(pixelColor, uv, coords, texture), 0);
         else
         {
             Bitmap spr = GetSprite();

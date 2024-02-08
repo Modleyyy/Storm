@@ -2,8 +2,8 @@ using System.Drawing.Imaging;
 
 namespace Storm.Shaders;
 
-public delegate Color PixelShaderDelegate<TArgs>(Color pixelColor, Vector2 uv, Vector2 coords, Vector2 texSize, TArgs args);
-public delegate Color PixelShaderDelegate(Color pixelColor, Vector2 uv, Vector2 coords, Vector2 texSize);
+public delegate Color PixelShaderDelegate<TArgs>(Color pixelColor, Vector2 uv, Vector2 coords, Bitmap texture, TArgs args);
+public delegate Color PixelShaderDelegate(Color pixelColor, Vector2 uv, Vector2 coords, Bitmap texture);
 
 public static class Shader
 {
@@ -16,7 +16,6 @@ public static class Shader
     {
         int width = imageToShade.Width;
         int height = imageToShade.Height;
-        Vector2 texSize = new(width, height);
         
         Rectangle rect = new(0, 0, width, height);
         Bitmap shadedImage = new(imageToShade);
@@ -35,7 +34,7 @@ public static class Shader
                 byte* row = pixelPtr + (y * stride);
 
                 Vector2 coords = new() { y = y };
-                Vector2 uv = new() { y = coords.y / texSize.y };
+                Vector2 uv = new() { y = coords.y / height };
 
                 Parallel.For(0, width, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, x =>
                 {
@@ -48,9 +47,9 @@ public static class Shader
 
                     Color pixelColor = Color.FromArgb(alpha, red, green, blue);
                     coords.x = x;
-                    uv.x = coords.x / texSize.x;
+                    uv.x = coords.x / width;
 
-                    Color shadedColor = shader(pixelColor, uv, coords, texSize, args);
+                    Color shadedColor = shader(pixelColor, uv, coords, imageToShade, args);
 
                     row[offset] = shadedColor.B;
                     row[offset + 1] = shadedColor.G;

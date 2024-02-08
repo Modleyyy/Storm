@@ -1,7 +1,35 @@
 namespace Storm.Shaders;
 
+using System.Diagnostics;
+
 public static class ShaderHelpers
 {
+    public static Color GetPixelColorUV(Bitmap image, Vector2 uv)
+    {
+        if (uv.x > 0 && uv.x < 1)
+            uv.x = 1 - uv.x;
+        if (uv.y > 0 && uv.y < 1)
+            uv.y = 1 - uv.y;
+
+        int x = (int)Math.Floor(uv.x * image.Width);
+        int y = (int)Math.Floor(uv.y * image.Height);
+
+        return image.GetPixel(x, y);
+    }
+
+    public static Color GetPixelColor(Bitmap image, Vector2 coords)
+    {
+        if (coords.x > 0 && coords.x < image.Width)
+            coords.x %= image.Width;
+        if(coords.y > 0 && coords.y < image.Height)
+            coords.y %= image.Height;
+
+        int x = (int)coords.x;
+        int y = (int)coords.y;
+
+        return image.GetPixel(x, y);
+    }
+
     public static Color InvertColor(Color color)
     {
         return Color.FromArgb(color.A, 255 - color.R, 255 - color.G, 255 - color.B);

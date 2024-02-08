@@ -10,7 +10,7 @@ static class BasicShaders {
         public Color color = Color.White;
     }
     public static readonly PixelShaderDelegate<FlashShaderArgs> Flash = (
-        Color pixelColor, Vector2 uv, Vector2 coords, Vector2 texSize, FlashShaderArgs args) =>
+        Color pixelColor, Vector2 uv, Vector2 coords, Bitmap texture, FlashShaderArgs args) =>
     {
         if (pixelColor == args.color)
         {
@@ -24,7 +24,7 @@ static class BasicShaders {
 
 
     public static readonly PixelShaderDelegate UVColor = (
-        Color pixelColor, Vector2 uv, Vector2 coords, Vector2 texSize) =>
+        Color pixelColor, Vector2 uv, Vector2 coords, Bitmap texture) =>
     {
         float r = 255 * uv.x;
         float g = 255 * uv.y;
@@ -34,11 +34,11 @@ static class BasicShaders {
 
 
     public static readonly PixelShaderDelegate Grayscale = (
-        Color pixelColor, Vector2 uv, Vector2 coords, Vector2 texSize) => ShaderHelpers.Grayscale(pixelColor);
+        Color pixelColor, Vector2 uv, Vector2 coords, Bitmap texture) => ShaderHelpers.Grayscale(pixelColor);
 
 
     public static readonly PixelShaderDelegate InvertColor = (
-        Color pixelColor, Vector2 uv, Vector2 coords, Vector2 texSize) => ShaderHelpers.InvertColor(pixelColor);
+        Color pixelColor, Vector2 uv, Vector2 coords, Bitmap texture) => ShaderHelpers.InvertColor(pixelColor);
 
 
     public record TintShaderArgs
@@ -46,7 +46,7 @@ static class BasicShaders {
         public Color tint = Color.White;
     }
     public static readonly PixelShaderDelegate<TintShaderArgs> Tint = (
-        Color pixelColor, Vector2 uv, Vector2 coords, Vector2 texSize, TintShaderArgs args) =>
+        Color pixelColor, Vector2 uv, Vector2 coords, Bitmap texture, TintShaderArgs args) =>
     {
         if (args.tint == Color.White)
         {
