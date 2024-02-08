@@ -52,13 +52,4 @@ public abstract partial class Game
         }
 
     }
-    private struct GameData {
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public string Title { get; set; }
-        public string IconPath { get; set; }
-        public int FPS { get; set; }
-    }
-
-
 }

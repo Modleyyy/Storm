@@ -3,28 +3,37 @@ namespace Storm;
 using System.Drawing.Drawing2D;
 using System.Text.Json;
 using System.Diagnostics;
+using SampleProject.Storm;
 
 public abstract partial class Game
 {
     private Canvas window;
     private Thread gameLoop;
-    private GameData data;
     private Stopwatch stopwatch;
 
     private bool isGameActive;
 
-    public Game()
-    {
-        string t = File.ReadAllText(Path.Combine(GetRootFolderPath(), "GameData.json"));
-        this.data = JsonSerializer.Deserialize<GameData>(t, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
+    private string _windowTitle;
+
+    public int windowWidth { get; }
+    public int windowHeight { get; }
+    public string windowTitle { get { return _windowTitle; } set { window.Text = value; _windowTitle = value; } }
+
+    public Game(
+        int windowWidth = 800, int windowHeight = 600, string windowTitle = "Game", string iconPath = "icon.ico", int fps = 30)
+    {
         window = new()
         {
-            ClientSize = new(data.Width, data.Height),
-            Text = data.Title,
-            Icon = new(data.IconPath),
+            ClientSize = new(windowWidth, windowHeight),
+            Text = windowTitle,
+            Icon = new(iconPath),
         };
-        FPS = data.FPS;
+        this.windowWidth = windowWidth;
+        this.windowHeight = windowHeight;
+
+        this._windowTitle = windowTitle;
+        FPS = fps;
 
         window.Paint += Renderer;
         
