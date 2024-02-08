@@ -1,9 +1,7 @@
 namespace Storm;
 
 using System.Drawing.Drawing2D;
-using System.Text.Json;
 using System.Diagnostics;
-using SampleProject.Storm;
 
 public abstract partial class Game
 {
