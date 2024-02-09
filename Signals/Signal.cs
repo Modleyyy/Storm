@@ -14,7 +14,7 @@ public sealed class Signal<TDelegate> where TDelegate : Delegate
     {
         if (IsConnectedTo(callback))
         {
-            Log.Error("Callback: \" {callback.Method.Name} \" is already connected to the signal.");
+            Log.Error($"Callback: \" {callback.Method.Name} \" is already connected to the signal.");
             return;
         }
 
@@ -25,7 +25,7 @@ public sealed class Signal<TDelegate> where TDelegate : Delegate
     {
         if (!IsConnectedTo(callback))
         {
-            Log.Error("Callback: \" {callback.Method.Name} \" isn't connected to the signal.");
+            Log.Error($"Callback: \" {callback.Method.Name} \" isn't connected to the signal.");
             return;
         }
 
@@ -60,7 +60,7 @@ public sealed class Signal
     {
         if (IsConnectedTo(callback))
         {
-            Log.Error("Callback: \" {callback.Method.Name} \" is already connected to the signal.");
+            Log.Error($"Callback: \" {callback.Method.Name} \" is already connected to the signal.");
             return;
         }
 
@@ -71,7 +71,7 @@ public sealed class Signal
     {
         if (!IsConnectedTo(callback))
         {
-            Log.Error("Callback: \" {callback.Method.Name} \" isn't connected to the signal.");
+            Log.Error($"Callback: \" {callback.Method.Name} \" isn't connected to the signal.");
             return;
         }
 
