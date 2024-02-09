@@ -7,9 +7,9 @@ public class AnimatedSprite2D : Sprite2D
 {
     public new bool isActive = true;
 
-    public Signal animationStarted = new();
-    public Signal<AnimationEndedDelegate> animationFinished = new();
-    public Signal<FrameChangedDelegate> frameChanged = new();
+    public readonly Signal animationStarted = new();
+    public readonly Signal<AnimationEndedDelegate> animationFinished = new();
+    public readonly Signal<FrameChangedDelegate> frameChanged = new();
 
     private readonly Dictionary<string, Animation> animations;
     private string _cur = "";
@@ -21,43 +21,47 @@ public class AnimatedSprite2D : Sprite2D
         get => _cur;
     }
     public int currentFrame;
-    private int frameTimer;
-    private int interval;
+    private float frameTimer;
+    private float interval;
 
-    public AnimatedSprite2D(string path, Dictionary<string, Animation> animations, Vector2? offset = null, bool centered = false)
-            : base(path, offset, centered)
+    public AnimatedSprite2D(string path, Dictionary<string, Animation> animations, Vector2? offset = null, bool centered = false, bool pooled = true)
+            : base(path, offset, centered, pooled)
     {
         this.animations = animations;
         _cur = "";
         currentFrame = 0;
         frameTimer = 0;
 
-        PlayAnimation(animations.Keys.ToArray<string>()[0]);
+        PlayAnimation(animations.Keys.ElementAt(0));
     }
 
     public void PlayAnimation(string animationName, int from = 0)
     {
         if (_cur != animationName)
         {
+            interval = animations[animationName].frames.Count == 1 || animations[animationName].FPS == animations[_cur].FPS
+                ? interval : Game.FPS / animations[animationName].FPS;
             _cur = animationName;
             animationStarted.Emit();
             currentFrame = from;
             frameTimer = 0;
         }
     }
+    public void AddAnimation(string name, Animation animation) => animations.Add(name, animation);
+    public bool HasAnimation(string animationName) => animations.ContainsKey(animationName);
     public override void OnUpdate(double deltaTime)
     {
         if (_cur != "" && animations!.ContainsKey(_cur))
         {
-            Animation animation = animations[_cur];
-            frameTimer++;
-            if (frameTimer >= interval)
+            Console.WriteLine(interval);
+            if (frameTimer == interval)
             {
                 frameTimer = 0;
-                frameChanged.Emit(currentFrame, currentFrame++);
+                int lastFrame = currentFrame;
                 currentFrame++;
-                if (currentFrame >= animation.numFrames)
+                if (currentFrame >= animations[_cur].numFrames)
                 {
+                    Animation animation = animations[_cur];
                     if (animation.loop)
                     {
                         animationFinished.Emit(true);
@@ -65,10 +69,11 @@ public class AnimatedSprite2D : Sprite2D
                     }
                     else
                     {
-                        currentFrame = animation.numFrames;
+                        currentFrame = animation.numFrames - 1;
                         animationFinished.Emit(false);
                     }
                 }
+                frameChanged.Emit(lastFrame, currentFrame);
             }
         }
     }

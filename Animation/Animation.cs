@@ -7,7 +7,7 @@ public struct Animation
     public int FPS;
     public List<Bitmap> frames;
 
-    public Animation(List<Bitmap> frames, bool loop, int FPS)
+    public Animation(List<Bitmap> frames, bool loop = true, int FPS = 8)
     {
         this.frames = frames;
         this.loop = loop;
