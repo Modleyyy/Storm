@@ -3,6 +3,8 @@ namespace Storm.Animation;
 using Components;
 using Signals;
 
+using AnimationCollection = Dictionary<string, Animation>;
+
 public class AnimatedSprite2D : Sprite2D
 {
     public new bool isActive = true;
@@ -11,7 +13,7 @@ public class AnimatedSprite2D : Sprite2D
     public readonly Signal<AnimationEndedDelegate> animationFinished = new();
     public readonly Signal<FrameChangedDelegate> frameChanged = new();
 
-    private readonly Dictionary<string, Animation> animations;
+    private readonly AnimationCollection animations;
     private string _cur = "";
     public string currentAnimation {
         set {
@@ -24,10 +26,10 @@ public class AnimatedSprite2D : Sprite2D
     private float frameTimer;
     private float interval;
 
-    public AnimatedSprite2D(string path, Dictionary<string, Animation> animations, Vector2? offset = null, bool centered = false, bool pooled = true)
+    public AnimatedSprite2D(string path, AnimationCollection animations, Vector2? offset = null, bool centered = false, bool pooled = true)
             : base(path, offset, centered, pooled)
     {
-        this.animations = animations;
+        this.animations = new(animations);
         _cur = "";
         currentFrame = 0;
         frameTimer = 0;
@@ -53,15 +55,15 @@ public class AnimatedSprite2D : Sprite2D
     {
         if (_cur != "" && animations!.ContainsKey(_cur))
         {
-            Console.WriteLine(interval);
             if (frameTimer == interval)
             {
                 frameTimer = 0;
                 int lastFrame = currentFrame;
                 currentFrame++;
-                if (currentFrame >= animations[_cur].numFrames)
+                Animation animation = animations[_cur];
+
+                if (currentFrame >= animation.numFrames)
                 {
-                    Animation animation = animations[_cur];
                     if (animation.loop)
                     {
                         animationFinished.Emit(true);
@@ -73,7 +75,7 @@ public class AnimatedSprite2D : Sprite2D
                         animationFinished.Emit(false);
                     }
                 }
-                frameChanged.Emit(lastFrame, currentFrame);
+                frameChanged.Emit(currentFrame, lastFrame);
             }
         }
     }
