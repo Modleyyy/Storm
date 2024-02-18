@@ -16,6 +16,8 @@ public class Sprite2D : Component
     public Vector2 offset = Vector2.Zero;
     public bool centered = false;
 
+    public Color tint = Color.White;
+
     public bool flippedH = false;
     public bool flippedV = false;
 
@@ -48,11 +50,8 @@ public class Sprite2D : Component
 
             if (centered) pos -= size * 0.5f;
 
-            if (boundObject.tint != Color.White)
-            {
-                BasicShaders.TintShaderArgs targs = new() { tint = boundObject.tint, };
-                spr = Shader.ShadeImage(spr, BasicShaders.Tint, targs);
-            }
+            if (tint != Color.White)
+                spr = Shader.ShadeImage(spr, BasicShaders.Tint, tint);
         
             float centerX = pos.x + size.x * 0.5f;
             float centerY = pos.y + size.y * 0.5f;
@@ -89,11 +88,8 @@ public class Sprite2D : Component
         if (centered) pos -= size * 0.5f;
 
         Bitmap shadedSpr = Shader.ShadeImage(spr, shader, args);
-        if (boundObject.tint != Color.White)
-        {
-            BasicShaders.TintShaderArgs targs = new() { tint = boundObject.tint, };
-            shadedSpr = Shader.ShadeImage(shadedSpr, BasicShaders.Tint, targs);
-        }
+        if (tint != Color.White)
+            shadedSpr = Shader.ShadeImage(shadedSpr, BasicShaders.Tint, tint);
     
         float centerX = pos.x + size.x * 0.5f;
         float centerY = pos.y + size.y * 0.5f;

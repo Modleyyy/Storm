@@ -81,10 +81,7 @@ public class Particle
             Bitmap spr = data.texture;
 
             if (color != Color.White)
-            {
-                BasicShaders.TintShaderArgs targs = new() { tint = color, };
-                spr = Shader.ShadeImage(spr, BasicShaders.Tint, targs);
-            }
+                spr = Shader.ShadeImage(spr, BasicShaders.Tint, color);
 
             Vector2 size = new(spr.Width * scale,spr.Height * scale);
             Vector2 halfsize = size * .5f;

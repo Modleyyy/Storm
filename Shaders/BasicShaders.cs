@@ -40,22 +40,17 @@ static class BasicShaders {
     public static readonly PixelShaderDelegate InvertColor = (
         Color pixelColor, Vector2 uv, Vector2 coords, Bitmap texture) => ShaderHelpers.InvertColor(pixelColor);
 
-
-    public record TintShaderArgs
+    public static readonly PixelShaderDelegate<Color> Tint = (
+        Color pixelColor, Vector2 uv, Vector2 coords, Bitmap texture, Color tint) =>
     {
-        public Color tint = Color.White;
-    }
-    public static readonly PixelShaderDelegate<TintShaderArgs> Tint = (
-        Color pixelColor, Vector2 uv, Vector2 coords, Bitmap texture, TintShaderArgs args) =>
-    {
-        if (args.tint == Color.White)
+        if (tint == Color.White)
         {
             return pixelColor;
         }
-        byte a = (byte) (pixelColor.A * args.tint.A / 255);
-        byte r = (byte) (pixelColor.R * args.tint.R / 255);
-        byte g = (byte) (pixelColor.G * args.tint.G / 255);
-        byte b = (byte) (pixelColor.B * args.tint.B / 255);
+        byte a = (byte) (pixelColor.A * tint.A / 255);
+        byte r = (byte) (pixelColor.R * tint.R / 255);
+        byte g = (byte) (pixelColor.G * tint.G / 255);
+        byte b = (byte) (pixelColor.B * tint.B / 255);
 
         return Color.FromArgb(a, r, g, b);
     };

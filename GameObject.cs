@@ -13,7 +13,6 @@ public class GameObject {
     public int updateIndex = 0;
     public int renderIndex = 0;
     public bool visible = true;
-    public Color tint = Color.White;
 
     public GameObject(string name, Transform transform, string[] tags = null!, bool visible = true)
     {
