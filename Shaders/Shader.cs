@@ -7,10 +7,10 @@ public delegate Color PixelShaderDelegate(Color pixelColor, Vector2 uv, Vector2 
 
 public static class Shader
 {
-    public static Bitmap ShadeImage(Bitmap imageToShade, PixelShaderDelegate shader)
-    {
-        return ShadeImage<byte>(imageToShade, (pixelColor, uv, coords, texSize, args) => shader(pixelColor, uv, coords, texSize), 0);
-    }
+    private static readonly ParallelOptions _po = new() { MaxDegreeOfParallelism = Environment.ProcessorCount };
+
+    public static Bitmap ShadeImage(Bitmap imageToShade, PixelShaderDelegate shader) =>
+        ShadeImage<byte>(imageToShade, (pixelColor, uv, coords, texSize, args) => shader(pixelColor, uv, coords, texSize), 0);
 
     public static Bitmap ShadeImage<TArgs>(Bitmap imageToShade, PixelShaderDelegate<TArgs> shader, TArgs args)
     {
@@ -25,18 +25,23 @@ public static class Shader
         int bytesPerPixel = 4;
         int stride = bmpData.Stride;
 
+        float uStep = 1f / width;
+        float vStep = width == height ? uStep : 1f / height;
+
+        Vector2 coords = new(0);
+        Vector2 uv = new(0);
+
         unsafe
         {
             byte* pixelPtr = (byte*)ptr;
 
-            Parallel.For(0, height, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, y =>
+            Parallel.For(0, height, _po, y =>
             {
                 byte* row = pixelPtr + (y * stride);
+                coords.y = y;
+                uv.y = vStep * y;
 
-                Vector2 coords = new() { y = y };
-                Vector2 uv = new() { y = coords.y / height };
-
-                Parallel.For(0, width, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, x =>
+                Parallel.For(0, width, _po, x =>
                 {
                     int offset = x * bytesPerPixel;
 
@@ -47,7 +52,7 @@ public static class Shader
 
                     Color pixelColor = Color.FromArgb(alpha, red, green, blue);
                     coords.x = x;
-                    uv.x = coords.x / width;
+                    uv.x = uStep * x;
 
                     Color shadedColor = shader(pixelColor, uv, coords, imageToShade, args);
 
