@@ -41,8 +41,11 @@ public class AnimatedSprite2D : Sprite2D
     {
         if (_cur != animationName)
         {
-            interval = animations[animationName].frames.Count == 1 || animations[animationName].FPS == animations[_cur].FPS
-                ? interval : Game.FPS / animations[animationName].FPS;
+            interval =
+                animations[animationName].frames.Count == 1 ? 0 :
+                animations[animationName].frames.Count == 0 ? 0 :
+                animations[animationName].FPS == animations[_cur].FPS ? interval :
+                (float)Game.FPS / animations[animationName].FPS;
             _cur = animationName;
             animationStarted.Emit();
             currentFrame = from;
@@ -55,11 +58,12 @@ public class AnimatedSprite2D : Sprite2D
     {
         if (_cur != "" && animations!.ContainsKey(_cur))
         {
-            if (frameTimer == interval)
+            frameTimer = Math.Clamp(frameTimer + 1, 0, interval);
+
+            if (frameTimer >= interval)
             {
                 frameTimer = 0;
-                int lastFrame = currentFrame;
-                currentFrame++;
+                int lastFrame = currentFrame++;
                 Animation animation = animations[_cur];
 
                 if (currentFrame >= animation.numFrames)
